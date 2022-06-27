@@ -1,0 +1,57 @@
+name: Build
+
+on:
+  push:
+    paths-ignore:
+      - '.gitignore'
+      - 'LICENSE'
+      - '*.md'
+      - '*.adoc'
+      - '*.txt'
+  pull_request:
+    paths-ignore:
+      - '.gitignore'
+      - 'LICENSE'
+      - '*.md'
+      - '*.adoc'
+      - '*.txt'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        java:
+          - {
+            version: "11"
+          }
+          - {
+            version: "17"
+          }
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK ${{ matrix.java.version }}
+        uses: actions/setup-java@v2
+        with:
+          java-version: ${{ matrix.java.version }}
+          distribution: temurin
+
+      - name: Get Date
+        id: get-date
+        run: |
+          echo "::set-output name=date::$(/bin/date -u "+%Y-%m")"
+        shell: bash
+      - name: Cache Gradle Repository
+        id: cache-gradle
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle
+          # refresh cache every month to avoid unlimited growth
+          key: gradle-repo-pr-${{ runner.os }}-${{ steps.get-date.outputs.date }}
+
+      - name: Test with Gradle
+        run: chmod +x ./gradlew && ./gradlew build
