@@ -54,4 +54,4 @@ jobs:
           key: gradle-repo-pr-${{ runner.os }}-${{ steps.get-date.outputs.date }}
 
       - name: Test with Gradle
-        run: chmod +x ./gradlew && ./gradlew build
+        run: chmod +x ./gradlew && ./gradlew check
