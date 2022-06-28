@@ -1,56 +1,28 @@
-# custom-validation Project
+# Custom Hibernate Validations
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+This project demonstrates how to use custom hibernate validations
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+## Supported validations
 
-## Running the application in dev mode
+Below are the custom hibernate validations available. This project will be updated to have many more custom validations
 
-You can run your application in dev mode that enables live coding using:
-```shell script
-./gradlew quarkusDev
+* Exists
+
+### Exists Validation
+
+This validation can be used to check if an item exists in a table before operating on it. For example before updating
+a 'task' item you can check if the item exists in the 'tasks' table or not.
+
+#### Usage Example
 ```
+import com.gigathinking.validations.constraints.Exists;
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
-
-## Packaging and running the application
-
-The application can be packaged using:
-```shell script
-./gradlew build
+@Path("/api/v1/tasks/{id}")
+@GET
+public Task getTask(
+    @Exists(table = "tasks") // We can check if the item exists in tasks table before fetching it
+    @PathParam("id") Long taskId
+) {
+  ....
+}
 ```
-It produces the `quarkus-run.jar` file in the `build/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `build/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar build/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./gradlew build -Dquarkus.package.type=uber-jar
-```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar build/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using: 
-```shell script
-./gradlew build -Dquarkus.package.type=native
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./gradlew build -Dquarkus.package.type=native -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./build/custom-validation-1.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/gradle-tooling.
-
-## Provided Code
-
-### RESTEasy Reactive
-
-Easily start your Reactive RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)

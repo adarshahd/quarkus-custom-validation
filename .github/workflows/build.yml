@@ -53,5 +53,5 @@ jobs:
           # refresh cache every month to avoid unlimited growth
           key: gradle-repo-pr-${{ runner.os }}-${{ steps.get-date.outputs.date }}
 
-      - name: Test with Gradle
+      - name: Build and Test with Gradle
         run: chmod +x ./gradlew && ./gradlew check
